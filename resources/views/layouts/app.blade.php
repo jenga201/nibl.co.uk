@@ -19,7 +19,7 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <div class="shrink-0">
-                        <a href="/"><img width="24" height="24" class="h-12 w-12" src="/img/penguin.svg" alt="NIBL"></a>
+                        <a href="/site/view/legacy" title="Switch to the legacy site"><img width="24" height="24" class="h-12 w-12" src="/img/penguin.svg" alt="NIBL"></a>
                         <div class="hidden">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
                     </div>
                     <div class="hidden md:block">

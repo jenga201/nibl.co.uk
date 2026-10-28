@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Legacy ooinuza schema owned by the ircBot stack. This migration exists
+     * Legacy ooinuza schema owned by the niblirc stack. This migration exists
      * so the test suite can build the table; it is a no-op against a database
      * that already has it.
      */

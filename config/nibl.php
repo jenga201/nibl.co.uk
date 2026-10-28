@@ -30,4 +30,22 @@ return [
 
     'http_cache_max_age' => (int) env('NIBL_HTTP_CACHE_MAX_AGE', 86400),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Legacy site color themes
+    |--------------------------------------------------------------------------
+    |
+    | Cookie name -> label + CSS file mapping for the nibl.co.uk-old skin.
+    |
+    */
+
+    'legacy_themes' => [
+        'default' => ['label' => 'Default', 'css' => 'style.css'],
+        'default-fullwidth' => ['label' => 'Default (Full width)', 'css' => 'style-fullwidth.css'],
+        'default-greenpurple' => ['label' => 'Green/Purple', 'css' => 'style-greenpurple.css'],
+        'default-greenpurple-fullwidth' => ['label' => 'Green/Purple (Full width)', 'css' => 'style-greenpurple-fullwidth.css'],
+        'default-blue' => ['label' => 'Blue', 'css' => 'style-blue.css'],
+        'default-kittie' => ['label' => 'Kittie', 'css' => 'style-kittie.css'],
+    ],
+
 ];

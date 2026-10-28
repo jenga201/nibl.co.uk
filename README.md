@@ -14,7 +14,7 @@ The nibl.co.uk website: Laravel 13 (PHP 8.5) on Apache, with Blade templates and
 docker compose up -d --build
 ```
 
-Runs the `niblcouk` container (Apache, port `${NIBLCOUK_HTTP_PORT:-8080}` → 80) on the external `my-bridge` network, with `/opt/nibl.co.uk/var` (override: `NIBLCOUK_VAR_DIR`) mounted at `/var/www/html/var`. Laravel's storage path is pointed at `var/`, so framework caches, sessions, and logs all live in that mount.
+Runs the `niblcouk` container (Apache, port `${NIBLCOUK_HTTP_PORT:-8080}` → 80) on the external `my-bridge` network, with the project's `var/` directory mounted at `/var/www/html/var`. Laravel's storage path is pointed at `var/`, so framework caches, sessions, and logs all live in that mount.
 
 The Dockerfile is the only build pipeline:
 

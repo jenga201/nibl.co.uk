@@ -56,8 +56,8 @@
     <h2 class="font-bold mt-4 text-2xl">Code</h2>
     <p>Our code is hosted at <a class="underline" href="https://github.com/NIBLCO">github.com/NIBLCO</a>. Most popular packages are linked below:</p>
     <article class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4 mt-4">
-        <a href="https://github.com/NIBLCO/ircBot" target="_blank" rel="noopener" class="border border-gray-300 rounded-sm p-4 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-900">
-            <div class="text-lg font-medium w-full">ircBot</div>
+        <a href="https://github.com/jenga201/niblirc" target="_blank" rel="noopener" class="border border-gray-300 rounded-sm p-4 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-900">
+            <div class="text-lg font-medium w-full">niblirc</div>
             <div class="font-medium text-gray-500">#nibl@irc.rizon.com</div>
         </a>
 

@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Marks every web response as publicly cacheable (parity with the
- * slim/http-cache middleware used before the Laravel migration).
+ * Applies a safe caching policy to web (HTML) responses.
+ *
+ * HTML now varies by cookie (the legacy site-view toggle and the legacy color
+ * theme), so it must be revalidated on every request — a long-lived public
+ * cache would keep serving the wrong template. Redirects are never cached.
  */
 final class SetHttpCacheHeaders
 {
@@ -16,10 +19,16 @@ final class SetHttpCacheHeaders
     {
         /** @var Response $response */
         $response = $next($request);
-        $response->headers->set(
-            'Cache-Control',
-            sprintf('public, max-age=%d', config('nibl.http_cache_max_age'))
-        );
+
+        $response->setVary('Cookie', false);
+
+        if ($response->isRedirection()) {
+            $response->headers->set('Cache-Control', 'no-store');
+
+            return $response;
+        }
+
+        $response->headers->set('Cache-Control', 'public, max-age=0, must-revalidate');
 
         return $response;
     }

@@ -33,7 +33,7 @@ services:
     ports:
       - "${NIBLCOUK_HTTP_PORT:-8080}:80"
     volumes:
-      - ${NIBLCOUK_VAR_DIR:-/opt/nibl.co.uk/var}:/var/www/html/var
+      - ./var:/var/www/html/var
     logging:
       driver: json-file
       options:
