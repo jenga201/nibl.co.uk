@@ -13,25 +13,25 @@ services:
     environment:
       APP_ENV: prod
       APP_DEBUG: "false"
-      APP_KEY: ${NIBLCOUK_APP_KEY:?Set NIBLCOUK_APP_KEY in .env}
-      APP_URL: ${NIBLCOUK_APP_URL:-https://www.nibl.co.uk}
+      APP_KEY: ${WEB_APP_KEY:?Set WEB_APP_KEY in .env}
+      APP_URL: ${WEB_APP_URL:-https://www.nibl.co.uk}
       APP_TIMEZONE: UTC
       DB_CONNECTION: mysql
-      DB_HOST: ${MYSQL_HOST:-niblmysql}
-      DB_PORT: ${MYSQL_PORT:-3306}
-      DB_DATABASE: ${MYSQL_DATABASE:-ooinuza}
-      DB_USERNAME: ${MYSQL_BOT_USER:?Set MYSQL_BOT_USER in .env}
-      DB_PASSWORD: ${MYSQL_BOT_PASSWORD:?Set MYSQL_BOT_PASSWORD in .env}
+      DB_HOST: ${SQL_HOST:-niblmysql}
+      DB_PORT: ${SQL_PORT:-3306}
+      DB_DATABASE: ${SQL_DATABASE:-ooinuza}
+      DB_USERNAME: ${SQL_USER:?Set SQL_USER in .env}
+      DB_PASSWORD: ${SQL_PASSWORD:?Set SQL_PASSWORD in .env}
       SESSION_DRIVER: file
       SESSION_LIFETIME: "60"
       SESSION_COOKIE: nibl-web
       CACHE_STORE: file
       QUEUE_CONNECTION: sync
       LOG_CHANNEL: single
-      LOG_LEVEL: ${NIBLCOUK_LOG_LEVEL:-info}
-      NIBL_DATA_CACHE: ${NIBLCOUK_DATA_CACHE:-apcu}
+      LOG_LEVEL: ${WEB_LOG_LEVEL:-info}
+      NIBL_DATA_CACHE: ${WEB_DATA_CACHE:-apcu}
     ports:
-      - "${NIBLCOUK_HTTP_PORT:-8080}:80"
+      - "${WEB_HTTP_PORT:-8080}:80"
     volumes:
       - ./var:/var/www/html/var
     logging:
