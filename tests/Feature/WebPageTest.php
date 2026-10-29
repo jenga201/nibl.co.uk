@@ -41,20 +41,21 @@ class WebPageTest extends TestCase
             ->assertSee('2');
     }
 
-    public function test_bot_page_shows_packs(): void
+    public function test_bot_page_renders_pack_table_mount(): void
     {
         $this->get('/bots/Web|Bot')
             ->assertOk()
-            ->assertSee('[Group] Web Show - 01 [1080p].mkv')
-            ->assertSee('[Group] Web Show - 02 [1080p].mkv');
+            ->assertSee('Web|Bot')
+            ->assertSee('data-pack-table')
+            ->assertSee('data-bot-name', false)
+            ->assertSee('data-bot-id="'.$this->bot->id.'"', false);
     }
 
-    public function test_bot_page_search_filters_packs(): void
+    public function test_bot_page_accepts_search_query(): void
     {
         $this->get('/bots/Web|Bot?query=web show - 01')
             ->assertOk()
-            ->assertSee('[Group] Web Show - 01 [1080p].mkv')
-            ->assertDontSee('[Group] Web Show - 02 [1080p].mkv');
+            ->assertSee('data-pack-table');
     }
 
     public function test_unknown_bot_page_is_not_found(): void
@@ -62,12 +63,11 @@ class WebPageTest extends TestCase
         $this->get('/bots/DoesNotExist')->assertNotFound();
     }
 
-    public function test_search_page_finds_packs_across_bots(): void
+    public function test_search_page_renders_pack_table_mount(): void
     {
         $this->get('/search?query=web show')
             ->assertOk()
-            ->assertSee('[Group] Web Show - 01 [1080p].mkv')
-            ->assertSee('[Group] Web Show - 02 [1080p].mkv');
+            ->assertSee('data-pack-table');
     }
 
     public function test_search_page_without_query_shows_no_results(): void

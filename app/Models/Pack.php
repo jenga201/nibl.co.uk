@@ -30,6 +30,8 @@ class Pack extends Model
         'episodeNumber' => 'episode_number',
         'last_modified' => 'last_modified',
         'lastModified' => 'last_modified',
+        'bot_name' => 'bot_name',
+        'botName' => 'bot_name',
     ];
 
     protected $table = 'updatepacklist_packs';
@@ -62,7 +64,7 @@ class Pack extends Model
      */
     public function scopeSearch(Builder $query, string $terms): Builder
     {
-        return $query->whereRaw('name REGEXP ?', [self::buildSearchPattern($terms)]);
+        return $query->whereRaw('updatepacklist_packs.name REGEXP ?', [self::buildSearchPattern($terms)]);
     }
 
     public function scopeForEpisode(Builder $query, int $episodeNumber): Builder
@@ -73,8 +75,18 @@ class Pack extends Model
     public function scopeSorted(Builder $query, string $by, string $direction): Builder
     {
         $column = self::SORTABLE[$by] ?? self::SORTABLE[self::DEFAULT_SORT];
+        $dir = strtolower($direction) === 'desc' ? 'desc' : 'asc';
 
-        return $query->orderBy($column, strtolower($direction) === 'desc' ? 'desc' : 'asc');
+        // bot_name is a pseudo-column on the related bots table. Order via a
+        // correlated subquery so no join is introduced — the query stays
+        // unambiguous and the regex `name` filter keeps resolving to packs.
+        if ($column === 'bot_name') {
+            return $query->orderByRaw(
+                '(SELECT updatepacklist_bots.name FROM updatepacklist_bots WHERE updatepacklist_bots.id = updatepacklist_packs.bot_id) '.$dir
+            );
+        }
+
+        return $query->orderBy($column, $dir);
     }
 
     /** Build the ordered-terms regex: "a b" becomes "a.*b". */

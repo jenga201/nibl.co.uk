@@ -79,6 +79,7 @@ final class PackController extends Controller
     private function searchQuery(SearchPacksRequest $request, ?int $botId = null): Builder
     {
         $packs = Pack::ofActiveBots()
+            ->with('bot:id,name,batchenable')
             ->search($request->searchTerm())
             ->forEpisode($request->episodeNumber())
             ->sorted($request->sort(), $request->direction());

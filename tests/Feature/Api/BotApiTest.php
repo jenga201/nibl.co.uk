@@ -22,7 +22,7 @@ class BotApiTest extends TestCase
 
         $this->createBot('Empty|Bot');
 
-        $this->getJson('/nibl/bots')
+        $this->getJson('/api/bots')
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.name', 'Listed|Bot')
@@ -39,7 +39,7 @@ class BotApiTest extends TestCase
         $this->createPack($bot, 1, '[Group] Solo Show - 01.mkv');
         $this->createPack($bot, 2, '[Group] Solo Show - 02.mkv');
 
-        $this->getJson('/nibl/bots/'.$bot->id)
+        $this->getJson('/api/bots/'.$bot->id)
             ->assertOk()
             ->assertJsonPath('data.id', $bot->id)
             ->assertJsonPath('data.name', 'Solo|Bot')
@@ -48,14 +48,14 @@ class BotApiTest extends TestCase
 
     public function test_unknown_bot_returns_not_found(): void
     {
-        $this->getJson('/nibl/bots/999999')->assertNotFound();
+        $this->getJson('/api/bots/999999')->assertNotFound();
     }
 
     public function test_active_bot_without_packs_is_retrievable(): void
     {
         $bot = $this->createBot('Lonely|Bot');
 
-        $this->getJson('/nibl/bots/'.$bot->id)
+        $this->getJson('/api/bots/'.$bot->id)
             ->assertOk()
             ->assertJsonPath('data.id', $bot->id)
             ->assertJsonPath('data.pack_count', 0);
@@ -66,6 +66,6 @@ class BotApiTest extends TestCase
         $bot = $this->createBot('Gone|Bot', statusId: Bot::STATUS_ACTIVE + 1);
         $this->createPack($bot, 1, '[Group] Gone Show - 01.mkv');
 
-        $this->getJson('/nibl/bots/'.$bot->id)->assertNotFound();
+        $this->getJson('/api/bots/'.$bot->id)->assertNotFound();
     }
 }

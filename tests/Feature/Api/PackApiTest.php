@@ -27,7 +27,7 @@ class PackApiTest extends TestCase
 
     public function test_bot_packs_returns_every_pack_of_the_bot(): void
     {
-        $this->getJson('/nibl/packs/'.$this->bot->id)
+        $this->getJson('/api/packs/'.$this->bot->id)
             ->assertOk()
             ->assertJsonCount(3, 'data')
             ->assertJsonStructure([
@@ -37,12 +37,12 @@ class PackApiTest extends TestCase
 
     public function test_bot_packs_of_unknown_bot_returns_not_found(): void
     {
-        $this->getJson('/nibl/packs/999999')->assertNotFound();
+        $this->getJson('/api/packs/999999')->assertNotFound();
     }
 
     public function test_bot_packs_page_paginates_and_sorts(): void
     {
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?page=1&size=2&sort=number&direction=desc')
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?page=1&size=2&sort=number&direction=desc')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJsonPath('data.0.number', 3)
@@ -55,7 +55,7 @@ class PackApiTest extends TestCase
 
     public function test_bot_packs_page_filters_by_episode_number(): void
     {
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?episode_number=2')
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?episode_number=2')
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.number', 2);
@@ -63,7 +63,7 @@ class PackApiTest extends TestCase
 
     public function test_legacy_camel_case_episode_parameter_is_accepted(): void
     {
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?episodeNumber=3')
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?episodeNumber=3')
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.number', 3);
@@ -71,7 +71,7 @@ class PackApiTest extends TestCase
 
     public function test_latest_returns_packs_newest_first(): void
     {
-        $this->getJson('/nibl/latest?size=2')
+        $this->getJson('/api/latest?size=2')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJsonPath('data.0.number', 2)
@@ -80,23 +80,23 @@ class PackApiTest extends TestCase
 
     public function test_search_is_case_insensitive_and_keeps_term_order(): void
     {
-        $this->getJson('/nibl/search?query=show alpha')
+        $this->getJson('/api/search?query=show alpha')
             ->assertOk()
             ->assertJsonCount(2, 'data');
 
-        $this->getJson('/nibl/search?query=SHOW ALPHA')
+        $this->getJson('/api/search?query=SHOW ALPHA')
             ->assertOk()
             ->assertJsonCount(2, 'data');
 
         // Terms must appear in order: "alpha show" matches nothing.
-        $this->getJson('/nibl/search?query=alpha show')
+        $this->getJson('/api/search?query=alpha show')
             ->assertOk()
             ->assertJsonCount(0, 'data');
     }
 
     public function test_search_paginates(): void
     {
-        $this->getJson('/nibl/search/page?query=show&size=2&page=2')
+        $this->getJson('/api/search/page?query=show&size=2&page=2')
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('meta.total', 3)
@@ -105,11 +105,11 @@ class PackApiTest extends TestCase
 
     public function test_search_in_bot(): void
     {
-        $this->getJson('/nibl/search/'.$this->bot->id.'?query=alpha')
+        $this->getJson('/api/search/'.$this->bot->id.'?query=alpha')
             ->assertOk()
             ->assertJsonCount(2, 'data');
 
-        $this->getJson('/nibl/search/'.$this->bot->id.'/page?query=alpha&size=1')
+        $this->getJson('/api/search/'.$this->bot->id.'/page?query=alpha&size=1')
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('meta.total', 2);
@@ -117,20 +117,20 @@ class PackApiTest extends TestCase
 
     public function test_search_in_unknown_bot_returns_not_found(): void
     {
-        $this->getJson('/nibl/search/999999?query=alpha')->assertNotFound();
+        $this->getJson('/api/search/999999?query=alpha')->assertNotFound();
     }
 
     public function test_search_requires_a_query(): void
     {
-        $this->getJson('/nibl/search')->assertStatus(422);
+        $this->getJson('/api/search')->assertStatus(422);
     }
 
     public function test_invalid_pagination_parameters_are_rejected(): void
     {
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?size='.(Pack::MAX_PAGE_SIZE + 1))->assertStatus(422);
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?sort=not_a_column')->assertStatus(422);
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?direction=sideways')->assertStatus(422);
-        $this->getJson('/nibl/packs/'.$this->bot->id.'/page?page=0')->assertStatus(422);
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?size='.(Pack::MAX_PAGE_SIZE + 1))->assertStatus(422);
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?sort=not_a_column')->assertStatus(422);
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?direction=sideways')->assertStatus(422);
+        $this->getJson('/api/packs/'.$this->bot->id.'/page?page=0')->assertStatus(422);
     }
 
     public function test_packs_of_inactive_bots_are_excluded(): void
@@ -138,11 +138,11 @@ class PackApiTest extends TestCase
         $inactive = $this->createBot('Dead|Bot', statusId: Bot::STATUS_ACTIVE + 1);
         $this->createPack($inactive, 9, '[Group] Show Alpha - 09 [1080p].mkv', modified: '2026-02-01 00:00:00');
 
-        $this->getJson('/nibl/search?query=show alpha')
+        $this->getJson('/api/search?query=show alpha')
             ->assertOk()
             ->assertJsonCount(2, 'data');
 
-        $this->getJson('/nibl/latest?size=10')
+        $this->getJson('/api/latest?size=10')
             ->assertOk()
             ->assertJsonCount(3, 'data');
     }

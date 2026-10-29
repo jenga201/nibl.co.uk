@@ -11,9 +11,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
-COPY vite.config.js ./
+COPY vite.config.js tsconfig.json ./
 COPY resources ./resources
 RUN npm run build
+RUN mkdir -p public/vendor/swagger-ui && cp -r node_modules/swagger-ui-dist/. public/vendor/swagger-ui/
 
 ###############################################################################
 # base: PHP runtime with only the extensions the app actually uses
@@ -92,7 +93,7 @@ RUN printf '%s\n' \
 COPY --from=vendor --chown=www-data:www-data /var/www/html ./
 
 # Freshly built frontend assets (Vite manifest + hashed bundles)
-COPY --from=assets --chown=www-data:www-data /app/public/build/ ./public/build/
+COPY --from=assets --chown=www-data:www-data /app/public/ ./public/
 
 EXPOSE 80
 

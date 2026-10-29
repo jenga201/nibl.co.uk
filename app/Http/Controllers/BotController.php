@@ -21,31 +21,14 @@ final class BotController extends Controller
         return $this->legacyBots($request, $botService, $packService);
     }
 
-    public function show(Request $request, string $name, BotService $botService, PackService $packService): View
+    public function show(string $name, BotService $botService): View
     {
         $bot = $botService->findByName($name);
         if ($bot === null) {
             abort(404, 'Bot not found');
         }
 
-        $botQuery = BotQueryDto::fromRequest($request->query());
-        $results = null;
-        $lastPacks = null;
-
-        if ($botQuery->getQueryDto()->isValid() === true) {
-            $results = $packService->searchInBot($bot, $botQuery);
-        } else {
-            $lastPacks = $packService->latestBotPacks($bot, $botQuery);
-        }
-
-        return view('bot', [
-            'bot' => $bot,
-            'query' => $botQuery->getQueryDto()->getValue(),
-            'results' => $results,
-            'lastPacks' => $lastPacks,
-            'previousPageNumber' => $botQuery->previousPageNumber(),
-            'nextPageNumber' => $botQuery->nextPageNumber(),
-        ]);
+        return view('bot', ['bot' => $bot]);
     }
 
     private function legacyBots(Request $request, BotService $botService, PackService $packService): View

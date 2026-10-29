@@ -11,7 +11,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
-        apiPrefix: 'nibl',
+        apiPrefix: 'api',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -29,7 +29,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         // The /nibl JSON API always answers with JSON error payloads, even
         // when the client sends no Accept header (curl, feed readers, ...).
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request): bool => $request->is('nibl', 'nibl/*') || $request->expectsJson()
+            fn (Request $request): bool => $request->is('api', 'api/*') || $request->expectsJson()
         );
 
         // Render any HTTP error without a dedicated errors/<code> view

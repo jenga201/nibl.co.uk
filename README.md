@@ -31,23 +31,23 @@ All runtime configuration is injected as environment variables by `docker-compos
 * `SQL_USER` / `SQL_PASSWORD` (**required**) — mapped to `DB_USERNAME`/`DB_PASSWORD`; DB host/database default to `SQL_HOST`/`SQL_DATABASE` (`niblmysql`/`ooinuza`).
 * Optional: `WEB_APP_URL`, `WEB_DATA_CACHE` (`apcu`, `redis` or `array`), `WEB_LOG_LEVEL` (default `info`).
 
-App-specific settings live in `config/nibl.php`; sessions use the `file` driver with the legacy `nibl-web` cookie name.
+App-specific settings live in `config/api.php`; sessions use the `file` driver with the legacy `nibl-web` cookie name.
 
 ## JSON API
 
-The site serves the NIBL bot/pack API directly from the `ooinuza` database — the old `api.nibl.co.uk` (`niblapi`) service is deprecated and no longer called. Routes live in `routes/api.php` (mounted under the `/nibl` prefix) and return standard Laravel JSON: `{"data": ...}` resources, plus `links` and paginator metadata under `meta` (`current_page`, `per_page`, `total`, ...) on the `/page` endpoints.
+The site serves the NIBL bot/pack API directly from the `ooinuza` database — the old `api.nibl.co.uk` (`niblapi`) service is deprecated and no longer called. Routes live in `routes/api.php` (mounted under the `/api` prefix) and return standard Laravel JSON: `{"data": ...}` resources, plus `links` and paginator metadata under `meta` (`current_page`, `per_page`, `total`, ...) on the `/page` endpoints.
 
 | Route | Purpose |
 |---|---|
-| `GET /nibl/bots` | All active bots (with pack counts) |
-| `GET /nibl/bots/{botId}` | A single bot |
-| `GET /nibl/packs/{botId}` | All packs of a bot |
-| `GET /nibl/packs/{botId}/page` | Paginated bot packs (`page`, `size`, `sort`, `direction`, `episode_number`) |
-| `GET /nibl/latest` | Latest packs, newest first (`size`, default 50) |
-| `GET /nibl/search` | Search all packs (`query` required, `episode_number` optional) |
-| `GET /nibl/search/page` | Paginated search |
-| `GET /nibl/search/{botId}` | Search within one bot |
-| `GET /nibl/search/{botId}/page` | Paginated search within one bot |
+| `GET /api/bots` | All active bots (with pack counts) |
+| `GET /api/bots/{botId}` | A single bot |
+| `GET /api/packs/{botId}` | All packs of a bot |
+| `GET /api/packs/{botId}/page` | Paginated bot packs (`page`, `size`, `sort`, `direction`, `episode_number`) |
+| `GET /api/latest` | Latest packs, newest first (`size`, default 50) |
+| `GET /api/search` | Search all packs (`query` required, `episode_number` optional) |
+| `GET /api/search/page` | Paginated search |
+| `GET /api/search/{botId}` | Search within one bot |
+| `GET /api/search/{botId}/page` | Paginated search within one bot |
 
 `sort` accepts `name`, `number`, `size`, `sizekbits`, `episode_number`, `last_modified`, `bot_id` and `id`; `direction` accepts `asc`/`desc`. Pagination is 1-based (`page` default 1, `size` default 50, max 1000). Search is case-insensitive and every whitespace-separated term must appear in the pack name, in order (same semantics as the old API).
 
@@ -64,7 +64,7 @@ It runs `composer update` and `npm install --package-lock-only` in throw-away Do
 ## Development
 
 1. Frontend: edit `resources/js/app.js`, `resources/css/app.css`, or the Blade views in `resources/views/`, then `docker compose up -d --build` — assets recompile during the image build.
-2. Routes are in `routes/web.php` (HTML pages) and `routes/api.php` (`/nibl` JSON API); controllers in `app/Http/Controllers/`. Bots and packs are read through the Eloquent models in `app/Models/`; domain logic (`app/Domain/`, `app/Infrastructure/`) is wired up in `app/Providers/AppServiceProvider.php`.
+2. Routes are in `routes/web.php` (HTML pages) and `routes/api.php` (`/api` JSON API); controllers in `app/Http/Controllers/`. Bots and packs are read through the Eloquent models in `app/Models/`; domain logic (`app/Domain/`, `app/Infrastructure/`) is wired up in `app/Providers/AppServiceProvider.php`.
 3. Health check: `GET /up`.
 4. Code quality: `composer format` (Laravel Pint) and `composer psalm` require the dev dependencies that the runtime image omits (`--no-dev`). Run them in a one-off container when needed:
 

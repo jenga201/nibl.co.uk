@@ -18,6 +18,8 @@ class PackResource extends JsonResource
             'sizekbits' => $this->sizekbits,
             'episode_number' => $this->episode_number,
             'last_modified' => $this->last_modified,
+            'bot_name' => $this->whenLoaded('bot', fn () => $this->bot->name),
+            'bot_batch_enabled' => $this->whenLoaded('bot', fn () => (bool) $this->bot->batchenable),
         ];
     }
 }

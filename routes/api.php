@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| NIBL API routes (mounted under the /nibl prefix — see bootstrap/app.php)
+| NIBL API routes (mounted under the /api prefix — see bootstrap/app.php)
 |--------------------------------------------------------------------------
 | Replaces the deprecated api.nibl.co.uk (niblapi) service: the same paths,
 | served straight from the ooinuza database with Laravel JSON responses.
