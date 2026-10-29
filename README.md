@@ -14,7 +14,7 @@ The nibl.co.uk website: Laravel 13 (PHP 8.5) on Apache, with Blade templates and
 docker compose up -d --build
 ```
 
-Runs the `niblcouk` container (Apache, port `${NIBLCOUK_HTTP_PORT:-8080}` → 80) on the external `my-bridge` network, with the project's `var/` directory mounted at `/var/www/html/var`. Laravel's storage path is pointed at `var/`, so framework caches, sessions, and logs all live in that mount.
+Runs the `niblcouk` container (Apache, port `${WEB_HTTP_PORT:-8080}` → 80) on the external `my-bridge` network, with the project's `var/` directory mounted at `/var/www/html/var`. Laravel's storage path is pointed at `var/`, so framework caches, sessions, and logs all live in that mount.
 
 The Dockerfile is the only build pipeline:
 
@@ -27,9 +27,9 @@ On every container start, `etc/docker/start-apache` creates the `var/framework/*
 
 All runtime configuration is injected as environment variables by `docker-compose.yml` (the image contains no `.env` file); values come from the shared `.env`:
 
-* `NIBLCOUK_APP_KEY` (**required**) — Laravel application key, e.g. `base64:<openssl rand -base64 32 output>`.
-* `MYSQL_BOT_USER` / `MYSQL_BOT_PASSWORD` (**required**) — mapped to `DB_USERNAME`/`DB_PASSWORD`; DB host/database default to `niblmysql`/`ooinuza`.
-* Optional: `NIBLCOUK_APP_URL`, `NIBLCOUK_DATA_CACHE` (`apcu`, `redis` or `array`), `NIBLCOUK_LOG_LEVEL` (default `info`).
+* `WEB_APP_KEY` (**required**) — Laravel application key, e.g. `base64:<openssl rand -base64 32 output>`.
+* `SQL_USER` / `SQL_PASSWORD` (**required**) — mapped to `DB_USERNAME`/`DB_PASSWORD`; DB host/database default to `SQL_HOST`/`SQL_DATABASE` (`niblmysql`/`ooinuza`).
+* Optional: `WEB_APP_URL`, `WEB_DATA_CACHE` (`apcu`, `redis` or `array`), `WEB_LOG_LEVEL` (default `info`).
 
 App-specific settings live in `config/nibl.php`; sessions use the `file` driver with the legacy `nibl-web` cookie name.
 
